@@ -8,12 +8,17 @@ WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 
 class MapRenderer:
-    def __init__(self, map, cell_size, Player_x, Player_y, padding=2):
+    def __init__(self, map, cell_size, Player_x, Player_y,screen_width,screen_height, padding=2):
+        self.padding = padding
         self.map = map
         self.cell_size = cell_size
-        self.padding = padding
-        self.screen_width = map.width * (cell_size + padding) - padding  
-        self.screen_height = map.height * (cell_size + padding) - padding  
+        self.player_pos = (Player_x, Player_y)
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.camera_offset_x = 0
+        self.camera_offset_y = 0
+        self.move_delay = 300  # Opóźnienie między ruchami gracza
+        self.last_move_time = 0 
         
         self.player_pos = (Player_x, Player_y) 
         map.fields[Player_x][Player_y] = MapGen.PlayerField(Player_x, Player_y)
@@ -31,11 +36,29 @@ class MapRenderer:
 
     def render(self):
         self.screen.fill(BLACK)
+        
+        # Obliczenie położenia kamery
+        camera_x = self.player_pos[0] * self.cell_size - self.screen_width // 2
+        camera_y = self.player_pos[1] * self.cell_size - self.screen_height // 2
 
-        for y, row in enumerate(self.map.fields):
-            for x, field in enumerate(row):
-                rect = pygame.Rect(x * (self.cell_size + self.padding), y * (self.cell_size + self.padding),self.cell_size, self.cell_size)
-                
+        # Ograniczenie kamery do granic mapy
+        camera_x = max(0, min(camera_x, self.map.width * self.cell_size - self.screen_width))
+        camera_y = max(0, min(camera_y, self.map.height * self.cell_size - self.screen_height))
+
+        # Obliczenie przesunięcia kamery
+        self.camera_offset_x = -camera_x
+        self.camera_offset_y = -camera_y
+
+        # Renderowanie fragmentu mapy widocznego na ekranie
+        start_x = max(0, camera_x // self.cell_size)
+        start_y = max(0, camera_y // self.cell_size)
+        end_x = min(self.map.width, (camera_x + self.screen_width) // self.cell_size + 2)
+        end_y = min(self.map.height, (camera_y + self.screen_height) // self.cell_size + 2)
+
+        for y in range(start_y, end_y):
+            for x in range(start_x, end_x):
+                field = self.map.fields[y][x]
+                rect = pygame.Rect(x * (self.cell_size + self.padding) + self.camera_offset_x, y * (self.cell_size + self.padding) + self.camera_offset_y, self.cell_size, self.cell_size)
                 if isinstance(field, MapGen.VoidField):
                     pygame.draw.rect(self.screen, BLACK, rect)  # Pustka
                     # Generowanie szumu na polach typu VoidField
@@ -54,7 +77,7 @@ class MapRenderer:
                 
                 elif isinstance(field, MapGen.LockedField):
                     pygame.draw.rect(self.screen, WHITE, rect)  # Rysowanie zablokowanego pola
-                
+
                 else:
                     pygame.draw.rect(self.screen, BLACK, rect)  # Rysowanie odblokowanego pola
                     pygame.draw.rect(self.screen, WHITE, rect, 1) 
