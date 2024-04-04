@@ -17,7 +17,14 @@ class MapRenderer:
         
         self.player_pos = (Player_x, Player_y) 
         map.fields[Player_x][Player_y] = MapGen.PlayerField(Player_x, Player_y)
-
+        
+        # Liczba klatek animacji
+        self.animation_frames = 10
+        self.current_frame = 0
+        
+        self.move_delay = 300  # Opóźnienie między ruchami gracza
+        self.last_move_time = 0  
+        
         pygame.init()
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("Labirynt")
@@ -39,8 +46,11 @@ class MapRenderer:
                         pygame.draw.circle(self.screen, WHITE, (dot_x, dot_y), dot_size)
                     
                 elif isinstance(field, MapGen.PlayerField):
-                    pygame.draw.rect(self.screen, GREEN, rect)  # Rysowanie pola z graczem
-                    pygame.draw.rect(self.screen, WHITE, rect, 1)
+                    # Interpolacja pośredniego rozmiaru gracza w trakcie animacji
+                    player_size = self.cell_size * (self.animation_frames - self.current_frame) / self.animation_frames
+                    player_rect = pygame.Rect(rect.centerx - player_size / 2, rect.centery - player_size / 2, player_size, player_size)
+                    pygame.draw.rect(self.screen, GREEN, player_rect)  # Rysowanie pola z animowanym graczem
+                    pygame.draw.rect(self.screen, WHITE, player_rect, 1)
                 
                 elif isinstance(field, MapGen.LockedField):
                     pygame.draw.rect(self.screen, WHITE, rect)  # Rysowanie zablokowanego pola
@@ -52,14 +62,24 @@ class MapRenderer:
         pygame.display.flip()
 
     def move_player(self, dx, dy):
-        new_x = self.player_pos[0] + dx
-        new_y = self.player_pos[1] + dy
-
-        # Sprawdzanie nowego pola
-        if isinstance(self.map.fields[new_y][new_x], MapGen.UnlockedField):
-            self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.UnlockedField(self.player_pos[0], self.player_pos[1])
-            self.player_pos = (new_x, new_y)
-            self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.PlayerField(self.player_pos[0], self.player_pos[1])
+        
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_move_time > self.move_delay:
+            new_x = self.player_pos[0] + dx
+            new_y = self.player_pos[1] + dy
+            if isinstance(self.map.fields[new_y][new_x], MapGen.UnlockedField):
+                # Zmniejszanie stopniowo rozmiaru gracza na polu, z którego odchodzi
+                for frame in range(self.animation_frames):
+                    self.current_frame = frame
+                    self.render()
+                
+                # Aktualizacja pozycji gracza i renderowanie na nowej pozycji
+                self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.UnlockedField(self.player_pos[0], self.player_pos[1])
+                self.player_pos = (new_x, new_y)
+                self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.PlayerField(self.player_pos[0], self.player_pos[1])
+                self.current_frame = 0
+                self.render()
+                self.last_move_time = current_time
 
     def handle_events(self):
         for event in pygame.event.get():
