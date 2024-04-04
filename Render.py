@@ -19,7 +19,7 @@ class MapRenderer:
         map.fields[Player_x][Player_y] = MapGen.PlayerField(Player_x, Player_y)
         
         # Liczba klatek animacji
-        self.animation_frames = 10
+        self.animation_frames = 30
         self.current_frame = 0
         
         self.move_delay = 300  # Opóźnienie między ruchami gracza
@@ -77,8 +77,13 @@ class MapRenderer:
                 self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.UnlockedField(self.player_pos[0], self.player_pos[1])
                 self.player_pos = (new_x, new_y)
                 self.map.fields[self.player_pos[1]][self.player_pos[0]] = MapGen.PlayerField(self.player_pos[0], self.player_pos[1])
+                
+                # Powiększanie stopniowo rozmiaru gracza na nowym polu
+                for frame in range(self.animation_frames,0,-1):
+                    self.current_frame = frame
+                    self.render()
+                
                 self.current_frame = 0
-                self.render()
                 self.last_move_time = current_time
 
     def handle_events(self):
