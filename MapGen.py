@@ -37,7 +37,15 @@ class VoidField(Field):
 
     def display(self):
         print("o",end="")
-        
+
+class PlayerField(Field):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.canEnter = False
+
+    def display(self):
+        print("P", end="")
+
 class Map:
     def __init__(self, width, height):
         self.width = width
