@@ -17,7 +17,7 @@ FONT_SIZE = 40
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Ruch gracza")
 
-# Pozycja gracza
+# startowa pozycja gracza
 player_x = WIDTH // 2
 player_y = HEIGHT // 4
 
@@ -90,14 +90,15 @@ while running:
         text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
         screen.blit(text, text_rect)
         pygame.display.flip()
-        pygame.time.delay(2000)  # Czekaj 2 sekundy przed zakończeniem gry
+        pygame.time.delay(2000)  # Czekaj 2 s przed zakończeniem gry
         running = False
+
     elif check_collision_with_line(player_x, player_y,line_points)=="win":
         text = font.render("Dobrze ;)", True, GREEN)
         text_rect = text.get_rect(center=(WIDTH//2, HEIGHT//2))
         screen.blit(text, text_rect)
         pygame.display.flip()
-        pygame.time.delay(2000)  # Czekaj 2 sekundy przed zakończeniem gry
+        pygame.time.delay(2000)  # Czekaj 2 s przed zakończeniem gry
         running = False
 
     # Wyczyszczenie ekranu
@@ -111,7 +112,7 @@ while running:
     pygame.display.flip()
 
     # Ograniczenie liczby klatek na sekundę
-    pygame.time.Clock().tick(60)
+    pygame.time.Clock().tick(30)
 
 # Wyjście z programu
 pygame.quit()
