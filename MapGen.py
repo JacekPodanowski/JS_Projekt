@@ -1,73 +1,34 @@
 import random
 import sys
 import pygame
-import numpy as np
 
-class Field:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.canEnter = False
+def generate_random_map(WIDTH,HEIGHT,maxLines):
+    line_points = []    
+    num_points = random.randint(8, maxLines)
+    for i in range(num_points):
+        x = random.randint(0, WIDTH)
+        y = random.randint(int(HEIGHT/1.5), HEIGHT)
+        line_points.append((x, y))
+    
+    # Sortowanie punktów po współrzędnej x
+    line_points.sort(key=lambda point: point[0])
+    
+    startY=line_points[0][1]
+    line_points[0]=(0,startY)
+    
+    endY=line_points[-1][1]
+    line_points[-1]=(WIDTH,endY)
 
-    def display(self):
-        print("Pole",end="")
+    # Wybierz losowy fragment linii do lądowania
+    landing_point = random.randint(1, len(line_points) - 2)
+    
+    landingY = line_points[landing_point][1]
+    #Poziomowanie strefy ladowania
+    startX=line_points[landing_point-1][0]
+    line_points[landing_point-1]=(startX,landingY)
+    
+    startX=line_points[landing_point+1][0]
+    line_points[landing_point+1]=(startX,landingY)
+    
 
-
-class UnlockedField(Field):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        self.canEnter = True
-
-    def display(self):
-        print(".",end="")
-
-
-class LockedField(Field):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        self.canEnter = False
-
-    def display(self):
-        print("x",end="")
-
-class VoidField(Field):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        self.canEnter = False
-
-    def display(self):
-        print("o",end="")
-
-class PlayerField(Field):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        self.canEnter = False
-
-    def display(self):
-        print("P", end="")
-
-class Map:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.fields = []
-
-        for y in range(height):
-            row = []
-            for x in range(width):
-                if x == 0 or x == width - 1 or y == 0 or y == height - 1:
-                    field = VoidField(x, y)  # Pustka na brzegach
-                elif x == 1 or x == width - 2 or y == 1 or y == height - 2:
-                    field = LockedField(x, y)  # Zablokowane ściany
-                else:
-                    field = UnlockedField(x, y) 
-                row.append(field)
-            self.fields.append(row)
-
-    def display(self):
-        for row in self.fields:
-            for field in row:
-                field.display()
-            print()  
-
-
+    return [landing_point,line_points]
