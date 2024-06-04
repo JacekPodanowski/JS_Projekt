@@ -2,6 +2,8 @@ import math
 import pygame
 import sys
 import MapGen
+from Settings import *
+
 
 class Player:
     PLAYER_SIZE = 10

@@ -2,7 +2,7 @@ import random
 import sys
 import pygame
 import numpy as np
-
+from Settings import *
 
 
 mean = 100 #zmieniane potem przed użuciem na width/ilosc lini
