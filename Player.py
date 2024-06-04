@@ -43,11 +43,11 @@ class Player:
                     (self.x - self.PLAYER_SIZE, self.y + self.PLAYER_SIZE)]
 
         right_leg = [(self.x + self.PLAYER_SIZE, self.y + self.PLAYER_SIZE),
-                     (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                     (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                     (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                     (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                     (self.x + self.PLAYER_SIZE, self.y + self.PLAYER_SIZE)]
+                    (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
+                    (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
+                    (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
+                    (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
+                    (self.x + self.PLAYER_SIZE, self.y + self.PLAYER_SIZE)]
 
         left_leg = [self.rotation_point(x, y, self.angle) for x, y in left_leg]
         right_leg = [self.rotation_point(x, y, self.angle) for x, y in right_leg]
@@ -91,15 +91,11 @@ class Player:
 
         return "no_collision"
 
-    def calculate_fuel_usage(self):
-        # TODO - bardziej realistyczne obliczanie zużycia paliwa
-        return abs(self.y_speed) / 2
-
     def adjust_thrust(self, fuel):
         if fuel > 0:
             self.x_speed += math.sin(self.angle) * self.rotation_speed
             self.y_speed -= math.cos(self.angle) * self.rotation_speed
-            fuel -= self.calculate_fuel_usage()
+            fuel -= 0.5
         return fuel
 
     def rotate_left(self):

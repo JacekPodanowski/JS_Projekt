@@ -86,7 +86,7 @@ def game_loop():
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
             pygame.display.flip()
-            pygame.time.delay(2000)  # Czekaj 2 sekundy przed zakończeniem gry
+            pygame.time.delay(2000)
             running = False
 
         elif collision == "too fast":
@@ -94,7 +94,7 @@ def game_loop():
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
             pygame.display.flip()
-            pygame.time.delay(3000)  # Czekaj 3 sekundy przed zakończeniem gry
+            pygame.time.delay(3000)
             running = False
 
         elif collision == "win":
@@ -102,7 +102,7 @@ def game_loop():
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
             pygame.display.flip()
-            pygame.time.delay(2000)  # Czekaj 2 sekundy przed zakończeniem gry
+            pygame.time.delay(2000)
             running = False
 
         # Wyczyszczenie ekranu
@@ -136,13 +136,13 @@ def main():
                     day+=1
                     current_menu = Gui.hangar_menu(screen, day)
                 elif current_menu == "save_and_exit":
-                    # Tutaj umieść logikę zapisu gry
+                    # zapis
                     print("Zapisano grę i wyjście.")
                     pygame.quit()
                     sys.exit()
 
         elif current_menu == "load_game":
-            # Tutaj umieść logikę ładowania gry
+            # Ladowanie
             print("Ładowanie gry...")
 
 if __name__ == "__main__":

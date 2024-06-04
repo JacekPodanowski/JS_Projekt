@@ -1,12 +1,12 @@
 import pygame
 import sys
-from Settings import *  # Importujemy wszystkie ustawienia
+from Settings import * 
 
 def main_menu(screen):
-    title_font = pygame.font.Font(None, 150)  # Powiększenie czcionki tytułu
-    subtitle_font = pygame.font.Font(None, 50)  # Powiększenie czcionki podtytułu
+    title_font = pygame.font.Font(None, 150) 
+    subtitle_font = pygame.font.Font(None, 50)
     menu_font = pygame.font.Font(None, 74)
-    quit_font = pygame.font.Font(None, 36)  # Mniejsza czcionka dla wyjścia
+    quit_font = pygame.font.Font(None, 36)
 
     while True:
         screen.fill(BLACK)
@@ -54,7 +54,7 @@ def hangar_menu(screen, day):
 
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 4))
         start_mission_rect = start_mission_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
-        save_and_exit_rect = save_and_exit_button.get_rect(bottomleft=(10, HEIGHT - 10))  # Lewy dolny róg
+        save_and_exit_rect = save_and_exit_button.get_rect(bottomleft=(10, HEIGHT - 10))
 
         screen.blit(title, title_rect)
         screen.blit(start_mission_button, start_mission_rect)

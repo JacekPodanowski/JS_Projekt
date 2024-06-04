@@ -68,7 +68,7 @@ def generate_random_map(WIDTH, HEIGHT, lines_num,landing_zone_min_size):
 
     landing_point = choose_landing_zone(line_points, landing_zone_min_size)
 
-    # Zmniejszenie wysokości lądowania o połowę
+    # Zmniejszenie wysokości lądowania o połowę ? 
 
 
     # Poziomowanie strefy ladowania
