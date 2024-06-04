@@ -95,7 +95,7 @@ class Player:
         if fuel > 0:
             self.x_speed += math.sin(self.angle) * self.rotation_speed
             self.y_speed -= math.cos(self.angle) * self.rotation_speed
-            fuel -= 0.5
+            fuel -= FUEL_USE
         return fuel
 
     def rotate_left(self):
