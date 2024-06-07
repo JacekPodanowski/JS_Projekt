@@ -5,16 +5,6 @@ import Player
 import Gui
 from Settings import *
 
-pygame.init()
-
-# Utworzenie okna gry
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Kosmiczny Kurier Kombinant")
-
-# Ustawienia czcionki
-font = pygame.font.Font(None, FONT_SIZE)
-
-
 def draw_lines(line_points,landing_zone_id):
     pygame.draw.lines(screen, RED, False, line_points[:landing_zone_id], 3)
     pygame.draw.line(screen, GREEN, line_points[landing_zone_id - 1], line_points[landing_zone_id], 5)
@@ -121,27 +111,34 @@ def start_mission(day):
         return collision
 
 def main():
+    day = 1
     while True:
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
-            day=25
             current_menu = Gui.hangar_menu(screen, day)
 
-            while current_menu in ["start_mission", "save_and_exit"]:
+            while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
                 if current_menu == "start_mission":
                     start_mission(day)
-                    day+=1
+                    day += 1
                     current_menu = Gui.hangar_menu(screen, day)
                 elif current_menu == "save_and_exit":
-                    # zapis
+                    # Zapis
                     print("Zapisano grę i wyjście.")
-                    pygame.quit()
-                    sys.exit()
+                    current_menu = Gui.main_menu(screen)
+                elif current_menu == "upgrades":
+                    current_menu = Gui.upgrade_menu(screen)
+                    if current_menu == "hangar_menu":
+                        current_menu = Gui.hangar_menu(screen, day)
 
         elif current_menu == "load_game":
-            # Ladowanie
+            # Ładowanie gry...
             print("Ładowanie gry...")
 
 if __name__ == "__main__":
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Kosmiczny Kurier Kombinant")
+    font = pygame.font.Font(None, FONT_SIZE)
     main()

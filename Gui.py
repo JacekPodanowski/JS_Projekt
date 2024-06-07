@@ -51,14 +51,17 @@ def hangar_menu(screen, day):
         title = menu_font.render(f"Hangar - Dzień {day}", True, WHITE)
         start_mission_button = small_font.render("Odpal Misję", True, GREEN)
         save_and_exit_button = small_font.render("Wyjdź z zapisem", True, RED)
+        upgrades_button = small_font.render("Ulepszenia", True, GREEN)
 
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 4))
         start_mission_rect = start_mission_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
         save_and_exit_rect = save_and_exit_button.get_rect(bottomleft=(10, HEIGHT - 10))
+        upgrades_rect = upgrades_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
 
         screen.blit(title, title_rect)
         screen.blit(start_mission_button, start_mission_rect)
         screen.blit(save_and_exit_button, save_and_exit_rect)
+        screen.blit(upgrades_button, upgrades_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -66,8 +69,60 @@ def hangar_menu(screen, day):
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_mission_rect.collidepoint(event.pos):
-                    return "start_mission"  # Rozpocznij misję
+                    return "start_mission"
                 if save_and_exit_rect.collidepoint(event.pos):
-                    return "save_and_exit"  # Zapisz i wyjdź
+                    return "save_and_exit"
+                if upgrades_rect.collidepoint(event.pos):
+                    return "upgrades"
+
+        pygame.display.flip()
+
+def upgrade_menu(screen):
+    small_font = pygame.font.Font(None, 36)
+    while True:
+        screen.fill(BLACK)
+        rect_width, rect_height = 300, 100
+        spacing = 20
+
+        left_engine_rect = pygame.Rect(WIDTH // 4 - rect_width // 2, HEIGHT // 4 - rect_height // 2, rect_width, rect_height)
+        right_engine_rect = pygame.Rect(3 * WIDTH // 4 - rect_width // 2, HEIGHT // 4 - rect_height // 2, rect_width, rect_height)
+        fuel_tank_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + rect_height + spacing, rect_width, rect_height)
+        main_engine_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + 2 * (rect_height + spacing), rect_width, rect_height)
+
+        quit_button = small_font.render("Wyjdź", True, RED)
+        quit_rect = quit_button.get_rect(bottomleft=(10, HEIGHT - 10))
+
+        pygame.draw.rect(screen, RED, left_engine_rect)
+        pygame.draw.rect(screen, RED, right_engine_rect)
+        pygame.draw.rect(screen, RED, fuel_tank_rect)
+        pygame.draw.rect(screen, RED, main_engine_rect)
+
+        left_engine_label = small_font.render("Lewy Silnik Manewrowy", True, WHITE)
+        right_engine_label = small_font.render("Prawy Silnik Manewrowy", True, WHITE)
+        fuel_tank_label = small_font.render("Zbiornik Paliwa", True, WHITE)
+        main_engine_label = small_font.render("Główny Silnik", True, WHITE)
+
+        screen.blit(left_engine_label, left_engine_label.get_rect(center=left_engine_rect.center))
+        screen.blit(right_engine_label, right_engine_label.get_rect(center=right_engine_rect.center))
+        screen.blit(fuel_tank_label, fuel_tank_label.get_rect(center=fuel_tank_rect.center))
+        screen.blit(main_engine_label, main_engine_label.get_rect(center=main_engine_rect.center))
+
+        screen.blit(quit_button, quit_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if left_engine_rect.collidepoint(event.pos):
+                    print("Upgrade Lewy Silnik Manewrowy")
+                if right_engine_rect.collidepoint(event.pos):
+                    print("Upgrade Prawy Silnik Manewrowy")
+                if fuel_tank_rect.collidepoint(event.pos):
+                    print("Upgrade Zbiornik Paliwa")
+                if main_engine_rect.collidepoint(event.pos):
+                    print("Upgrade Główny Silnik")
+                if quit_rect.collidepoint(event.pos):
+                    return "hangar_menu"
 
         pygame.display.flip()

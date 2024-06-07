@@ -19,6 +19,12 @@ class Player:
         self.money= 0
         self.angle = 0
         self.running = True
+        self.player_upgrades = {
+            "Lewy Silnik Manewrowy": False,
+            "Prawy Silnik Manewrowy": False,
+            "Zbiornik Paliwa": False,
+            "Główny Silnik": False
+        }
 
     def rotation_point(self, x, y, angle):
         x -= self.x
