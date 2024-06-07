@@ -51,7 +51,7 @@ def draw_info(player, landing_speed_limit):
 def start_mission(day):
     
     #mapa
-    landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT, 20, 30)
+    landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT,day)
     draw_lines(line_points,landing_zone_id)
     player = Player.Player(WIDTH // 2, -50, ENTRY_SPEED)  # startowa pozycja gracza i prędkość wlotowa
 
@@ -125,7 +125,7 @@ def main():
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
-            day=1
+            day=25
             current_menu = Gui.hangar_menu(screen, day)
 
             while current_menu in ["start_mission", "save_and_exit"]:
