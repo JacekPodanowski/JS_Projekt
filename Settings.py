@@ -1,5 +1,6 @@
 WIDTH, HEIGHT = 1280, 720
 
+#Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -7,5 +8,15 @@ GREEN = (0, 255, 0)
 GREY = (128, 128, 128)
 ORANGE = (255, 165, 0)
 
+#Font
 FONT_SIZE = 40
+
+#Player vars
 FUEL_USE = 0.5
+ROTATION_SPEED = 0.02
+
+#Game vars
+LANDING_SPEED_LIMIT = 1
+GRAVITY_FORCE = 0.003
+ENTRY_SPEED = 1
+DRAG = 0.999

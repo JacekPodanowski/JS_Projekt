@@ -14,10 +14,8 @@ pygame.display.set_caption("Kosmiczny Kurier Kombinant")
 # Ustawienia czcionki
 font = pygame.font.Font(None, FONT_SIZE)
 
-# mapa
-landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT, 20, 30)
 
-def draw_line():
+def draw_lines(line_points,landing_zone_id):
     pygame.draw.lines(screen, RED, False, line_points[:landing_zone_id], 3)
     pygame.draw.line(screen, GREEN, line_points[landing_zone_id - 1], line_points[landing_zone_id], 5)
     pygame.draw.lines(screen, RED, False, line_points[landing_zone_id:], 3)
@@ -33,7 +31,7 @@ def draw_info(player, landing_speed_limit):
     screen.blit(text_fuel_amount, (10, 2))
 
     # x speed
-    text_speed_x = font.render(f"Speed X: {speed_x:.3f}", True, WHITE)
+    text_speed_x = font.render(f"Speed X: {speed_x:.2f}", True, WHITE)
     screen.blit(text_speed_x, (10, 50))
 
     # kontrola predkosci
@@ -43,19 +41,19 @@ def draw_info(player, landing_speed_limit):
         speed_y_color = WHITE
 
     # y speed
-    text_speed_y = font.render(f"Speed Y: {(-speed_y):.3f}", True, speed_y_color)
+    text_speed_y = font.render(f"Speed Y: {(-speed_y):.2f}", True, speed_y_color)
     screen.blit(text_speed_y, (10, 70))
 
     # fuel bar
     pygame.draw.rect(screen, GREEN, (10, 20, int(fuel), 20))
     pygame.draw.rect(screen, GREY, (10, 20, int(fuel), 20), 2)
 
-def game_loop():
-    gravity_force = 0.003
-    entry_speed = 1
-    drag = 0.999
-    player = Player.Player(WIDTH // 2, -100, entry_speed)  # startowa pozycja gracza i prędkość wlotowa
-    landing_speed_limit = 1
+def start_mission(day):
+    
+    #mapa
+    landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT, 20, 30)
+    draw_lines(line_points,landing_zone_id)
+    player = Player.Player(WIDTH // 2, -50, ENTRY_SPEED)  # startowa pozycja gracza i prędkość wlotowa
 
     running = True
     while running:
@@ -75,10 +73,10 @@ def game_loop():
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             player.rotate_right()
 
-        player.update(drag, gravity_force)
-        collision = player.check_collision_with_line(line_points, landing_zone_id, landing_speed_limit)
+        player.update(DRAG, GRAVITY_FORCE)
+        collision = player.check_collision_with_line(line_points, landing_zone_id, LANDING_SPEED_LIMIT)
 
-        draw_line()
+
 
         # Sprawdzenie kolizji
         if collision == "collision":
@@ -110,8 +108,8 @@ def game_loop():
 
         # Narysowanie gracza
         player.draw(screen, GREY, RED)
-        draw_line()
-        draw_info(player, landing_speed_limit)
+        draw_lines(line_points,landing_zone_id)
+        draw_info(player, LANDING_SPEED_LIMIT)
 
         # Aktualizacja ekranu
         pygame.display.flip()
@@ -132,7 +130,7 @@ def main():
 
             while current_menu in ["start_mission", "save_and_exit"]:
                 if current_menu == "start_mission":
-                    game_loop()
+                    start_mission(day)
                     day+=1
                     current_menu = Gui.hangar_menu(screen, day)
                 elif current_menu == "save_and_exit":

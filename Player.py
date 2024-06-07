@@ -13,7 +13,7 @@ class Player:
         self.y = y
         self.x_speed = 0
         self.y_speed = entry_speed
-        self.rotation_speed = 0.02
+        self.rotation_speed = ROTATION_SPEED
         self.max_fuel = 100
         self.fuel = self.max_fuel
         self.money= 0
