@@ -6,8 +6,6 @@ from Settings import *
 
 
 class Player:
-    PLAYER_SIZE = 10
-
     def __init__(self, x, y,entry_speed):
         self.x = x
         self.y = y
@@ -48,24 +46,24 @@ class Player:
         return x, y
 
     def draw(self, screen,bodyColor, legColor):
-        pygame.draw.circle(screen, bodyColor, (self.x, self.y), self.PLAYER_SIZE)
+        pygame.draw.circle(screen, bodyColor, (self.x, self.y), PLAYER_SIZE)
 
-        leg_length = self.PLAYER_SIZE
+        leg_length = PLAYER_SIZE
         leg_width = 4
 
-        left_leg = [(self.x - self.PLAYER_SIZE, self.y + self.PLAYER_SIZE),
-                    (self.x - self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x - self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x - self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x - self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x - self.PLAYER_SIZE, self.y + self.PLAYER_SIZE)]
+        left_leg = [(self.x - PLAYER_SIZE, self.y + PLAYER_SIZE),
+                    (self.x - PLAYER_SIZE - leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x - PLAYER_SIZE - leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x - PLAYER_SIZE + leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x - PLAYER_SIZE + leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x - PLAYER_SIZE, self.y + PLAYER_SIZE)]
 
-        right_leg = [(self.x + self.PLAYER_SIZE, self.y + self.PLAYER_SIZE),
-                    (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x + self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length),
-                    (self.x + self.PLAYER_SIZE, self.y + self.PLAYER_SIZE)]
+        right_leg = [(self.x + PLAYER_SIZE, self.y + PLAYER_SIZE),
+                    (self.x + PLAYER_SIZE + leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x + PLAYER_SIZE + leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x + PLAYER_SIZE - leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x + PLAYER_SIZE - leg_width, self.y + PLAYER_SIZE + leg_length),
+                    (self.x + PLAYER_SIZE, self.y + PLAYER_SIZE)]
 
         left_leg = [self.rotation_point(x, y, self.angle) for x, y in left_leg]
         right_leg = [self.rotation_point(x, y, self.angle) for x, y in right_leg]
@@ -74,11 +72,11 @@ class Player:
         pygame.draw.polygon(screen, legColor, right_leg)
 
     def check_collision_with_line(self, line_points,landing_zone_id,landing_speed_limit):
-        leg_length = self.PLAYER_SIZE
+        leg_length = PLAYER_SIZE
         leg_width = 4
 
-        left_leg = [(self.x - self.PLAYER_SIZE - leg_width, self.y + self.PLAYER_SIZE + leg_length)]
-        right_leg = [(self.x + self.PLAYER_SIZE + leg_width, self.y + self.PLAYER_SIZE + leg_length)]
+        left_leg = [(self.x - PLAYER_SIZE - leg_width, self.y + PLAYER_SIZE + leg_length)]
+        right_leg = [(self.x + PLAYER_SIZE + leg_width, self.y + PLAYER_SIZE + leg_length)]
 
         left_leg = [self.rotation_point(x, y, self.angle) for x, y in left_leg]
         right_leg = [self.rotation_point(x, y, self.angle) for x, y in right_leg]
@@ -136,7 +134,6 @@ class Player:
             self.angle += ROTATION_MULTIPLAYER * self.rotation_speed
         else:
             self.angle += self.rotation_speed
-
 
     def update(self, drag, gravity):
         self.y_speed += gravity
