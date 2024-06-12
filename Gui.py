@@ -86,46 +86,46 @@ def upgrade_menu(screen, player):
 
         left_engine_rect = pygame.Rect(WIDTH // 4 - rect_width // 2, HEIGHT // 4 - rect_height // 2, rect_width, rect_height)
         right_engine_rect = pygame.Rect(3 * WIDTH // 4 - rect_width // 2, HEIGHT // 4 - rect_height // 2, rect_width, rect_height)
-        fuel_tank_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + rect_height + spacing, rect_width, rect_height)
-        main_engine_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + 2 * (rect_height + spacing), rect_width, rect_height)
+        engine_efficiency_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + rect_height + spacing, rect_width, rect_height)
+        engine_power_rect = pygame.Rect(WIDTH // 2 - rect_width // 2, HEIGHT // 2 - rect_height // 2 + 2 * (rect_height + spacing), rect_width, rect_height)
 
-        quit_button = small_font.render("Wyjdź", True, RED)
+        quit_button = small_font.render("Wróć do hangaru", True, RED)
         quit_rect = quit_button.get_rect(bottomleft=(10, HEIGHT - 10))
 
-        if not player.player_upgrades["Lewy Silnik Manewrowy"]:
+        if not player.player_upgrades["Left_maneuvering_engine"]:
             color_left_engine = RED
         else:
             color_left_engine = GREEN
 
-        if not player.player_upgrades["Prawy Silnik Manewrowy"]:
+        if not player.player_upgrades["Right_maneuvering_engine"]:
             color_right_engine = RED
         else:
             color_right_engine = GREEN
 
-        if not player.player_upgrades["Efektywnosc Silnika"]:
+        if not player.player_upgrades["Engine_efficiency"]:
             color_fuel_tank = RED
         else:
             color_fuel_tank = GREEN
 
-        if not player.player_upgrades["Moc silnika"]:
+        if not player.player_upgrades["Engine_power"]:
             color_main_engine = RED
         else:
             color_main_engine = GREEN
 
         pygame.draw.rect(screen, color_left_engine, left_engine_rect)
         pygame.draw.rect(screen, color_right_engine, right_engine_rect)
-        pygame.draw.rect(screen, color_fuel_tank, fuel_tank_rect)
-        pygame.draw.rect(screen, color_main_engine, main_engine_rect)
+        pygame.draw.rect(screen, color_fuel_tank, engine_efficiency_rect)
+        pygame.draw.rect(screen, color_main_engine, engine_power_rect)
 
         left_engine_label = small_font.render("Lewy Silnik Manewrowy", True, WHITE)
         right_engine_label = small_font.render("Prawy Silnik Manewrowy", True, WHITE)
-        engine_efficiency_label = small_font.render("Efektywnosc Silnika", True, WHITE)
-        engine_power_label = small_font.render("Moc silnika", True, WHITE)
+        engine_efficiency_label = small_font.render("Efektywność Silnika", True, WHITE)
+        engine_power_label = small_font.render("Moc Silnika", True, WHITE)
 
         screen.blit(left_engine_label, left_engine_label.get_rect(center=left_engine_rect.center))
         screen.blit(right_engine_label, right_engine_label.get_rect(center=right_engine_rect.center))
-        screen.blit(engine_efficiency_label, engine_efficiency_label.get_rect(center=fuel_tank_rect.center))
-        screen.blit(engine_power_label, engine_power_label.get_rect(center=main_engine_rect.center))
+        screen.blit(engine_efficiency_label, engine_efficiency_label.get_rect(center=engine_efficiency_rect.center))
+        screen.blit(engine_power_label, engine_power_label.get_rect(center=engine_power_rect.center))
 
         screen.blit(quit_button, quit_rect)
 
@@ -142,14 +142,14 @@ def upgrade_menu(screen, player):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if left_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Lewy Silnik Manewrowy"]:
-                    player.upgrade("Lewy Silnik Manewrowy")
-                if right_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Prawy Silnik Manewrowy"]:
-                    player.upgrade("Prawy Silnik Manewrowy")
-                if fuel_tank_rect.collidepoint(event.pos) and not player.player_upgrades["Efektywnosc Silnika"]:
-                    player.upgrade("Efektywnosc Silnika")
-                if main_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Moc silnika"]:
-                    player.upgrade("Moc silnika")
+                if left_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Left_maneuvering_engine"]:
+                    player.upgrade("Left_maneuvering_engine")
+                if right_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Right_maneuvering_engine"]:
+                    player.upgrade("Right_maneuvering_engine")
+                if engine_efficiency_rect.collidepoint(event.pos) and not player.player_upgrades["Engine_efficiency"]:
+                    player.upgrade("Engine_efficiency")
+                if engine_power_rect.collidepoint(event.pos) and not player.player_upgrades["Engine_power"]:
+                    player.upgrade("Engine_power")
                 if quit_rect.collidepoint(event.pos):
                     return "hangar_menu"
 

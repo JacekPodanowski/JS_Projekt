@@ -20,10 +20,10 @@ class Player:
         self.angle = 0
         self.running = True
         self.player_upgrades = {
-            "Lewy Silnik Manewrowy": False,
-            "Prawy Silnik Manewrowy": False,
-            "Efektywnosc Silnika": False,
-            "Moc silnika": False
+            "Left_maneuvering_engine": False,
+            "Right_maneuvering_engine": False,
+            "Engine_efficiency": False,
+            "Engine_power": False
         }
 
     def upgrade(self, upgrade_name):
@@ -112,27 +112,27 @@ class Player:
     def adjust_thrust(self, fuel):
         if fuel > 0:
             
-            if(self.player_upgrades["Moc silnika"]):
+            if(self.player_upgrades["Engine_power"]):
                 self.x_speed += THRUST_MULTIPLAYER * math.sin(self.angle) * self.rotation_speed
                 self.y_speed -= THRUST_MULTIPLAYER * math.cos(self.angle) * self.rotation_speed
             else:
                 self.x_speed += math.sin(self.angle) * self.rotation_speed
                 self.y_speed -= math.cos(self.angle) * self.rotation_speed
             
-            if(self.player_upgrades["Efektywnosc Silnika"]):
+            if(self.player_upgrades["Engine_efficiency"]):
                 fuel -= FUEL_USE_MULTIPLAYER * FUEL_USE
             else:
                 fuel -= FUEL_USE
         return fuel
 
     def rotate_left(self):
-        if(self.player_upgrades["Prawy Silnik Manewrowy"]):
+        if(self.player_upgrades["Right_maneuvering_engine"]):
             self.angle -= ROTATION_MULTIPLAYER * self.rotation_speed
         else:
             self.angle -= self.rotation_speed
 
     def rotate_right(self):
-        if(self.player_upgrades["Lewy Silnik Manewrowy"]):
+        if(self.player_upgrades["Left_maneuvering_engine"]):
             self.angle += ROTATION_MULTIPLAYER * self.rotation_speed
         else:
             self.angle += self.rotation_speed
