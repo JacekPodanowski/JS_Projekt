@@ -77,7 +77,7 @@ def hangar_menu(screen, day):
 
         pygame.display.flip()
 
-def upgrade_menu(screen):
+def upgrade_menu(screen, player):
     small_font = pygame.font.Font(None, 36)
     while True:
         screen.fill(BLACK)
@@ -92,36 +92,64 @@ def upgrade_menu(screen):
         quit_button = small_font.render("Wyjdź", True, RED)
         quit_rect = quit_button.get_rect(bottomleft=(10, HEIGHT - 10))
 
-        pygame.draw.rect(screen, RED, left_engine_rect)
-        pygame.draw.rect(screen, RED, right_engine_rect)
-        pygame.draw.rect(screen, RED, fuel_tank_rect)
-        pygame.draw.rect(screen, RED, main_engine_rect)
+        if not player.player_upgrades["Lewy Silnik Manewrowy"]:
+            color_left_engine = RED
+        else:
+            color_left_engine = GREEN
+
+        if not player.player_upgrades["Prawy Silnik Manewrowy"]:
+            color_right_engine = RED
+        else:
+            color_right_engine = GREEN
+
+        if not player.player_upgrades["Efektywnosc Silnika"]:
+            color_fuel_tank = RED
+        else:
+            color_fuel_tank = GREEN
+
+        if not player.player_upgrades["Moc silnika"]:
+            color_main_engine = RED
+        else:
+            color_main_engine = GREEN
+
+        pygame.draw.rect(screen, color_left_engine, left_engine_rect)
+        pygame.draw.rect(screen, color_right_engine, right_engine_rect)
+        pygame.draw.rect(screen, color_fuel_tank, fuel_tank_rect)
+        pygame.draw.rect(screen, color_main_engine, main_engine_rect)
 
         left_engine_label = small_font.render("Lewy Silnik Manewrowy", True, WHITE)
         right_engine_label = small_font.render("Prawy Silnik Manewrowy", True, WHITE)
-        fuel_tank_label = small_font.render("Zbiornik Paliwa", True, WHITE)
-        main_engine_label = small_font.render("Główny Silnik", True, WHITE)
+        engine_efficiency_label = small_font.render("Efektywnosc Silnika", True, WHITE)
+        engine_power_label = small_font.render("Moc silnika", True, WHITE)
 
         screen.blit(left_engine_label, left_engine_label.get_rect(center=left_engine_rect.center))
         screen.blit(right_engine_label, right_engine_label.get_rect(center=right_engine_rect.center))
-        screen.blit(fuel_tank_label, fuel_tank_label.get_rect(center=fuel_tank_rect.center))
-        screen.blit(main_engine_label, main_engine_label.get_rect(center=main_engine_rect.center))
+        screen.blit(engine_efficiency_label, engine_efficiency_label.get_rect(center=fuel_tank_rect.center))
+        screen.blit(engine_power_label, engine_power_label.get_rect(center=main_engine_rect.center))
 
         screen.blit(quit_button, quit_rect)
+
+        money_label = small_font.render(f"Stan konta: {player.money} ¥", True, WHITE)
+        money_rect = money_label.get_rect(topleft=(10, 10))
+        screen.blit(money_label, money_rect)
+        
+        upgrade_cost_label = small_font.render(f"Koszt ulepszenia: {UPGRADE_COST} ¥", True, WHITE)
+        upgrade_cost_rect = upgrade_cost_label.get_rect(midbottom=(WIDTH // 2, HEIGHT - 10))
+        screen.blit(upgrade_cost_label, upgrade_cost_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if left_engine_rect.collidepoint(event.pos):
-                    print("Upgrade Lewy Silnik Manewrowy")
-                if right_engine_rect.collidepoint(event.pos):
-                    print("Upgrade Prawy Silnik Manewrowy")
-                if fuel_tank_rect.collidepoint(event.pos):
-                    print("Upgrade Zbiornik Paliwa")
-                if main_engine_rect.collidepoint(event.pos):
-                    print("Upgrade Główny Silnik")
+                if left_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Lewy Silnik Manewrowy"]:
+                    player.upgrade("Lewy Silnik Manewrowy")
+                if right_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Prawy Silnik Manewrowy"]:
+                    player.upgrade("Prawy Silnik Manewrowy")
+                if fuel_tank_rect.collidepoint(event.pos) and not player.player_upgrades["Efektywnosc Silnika"]:
+                    player.upgrade("Efektywnosc Silnika")
+                if main_engine_rect.collidepoint(event.pos) and not player.player_upgrades["Moc silnika"]:
+                    player.upgrade("Moc silnika")
                 if quit_rect.collidepoint(event.pos):
                     return "hangar_menu"
 

@@ -14,9 +14,9 @@ class Player:
         self.x_speed = 0
         self.y_speed = entry_speed
         self.rotation_speed = ROTATION_SPEED
-        self.max_fuel = 100
+        self.max_fuel = MAX_FUEL
         self.fuel = self.max_fuel
-        self.money= 0
+        self.money= START_MONEY
         self.angle = 0
         self.running = True
         self.player_upgrades = {
@@ -27,11 +27,12 @@ class Player:
         }
 
     def upgrade(self, upgrade_name):
-        if self.money < UPGRAGE_COST:
+        if self.money < UPGRADE_COST:
             return "No money"
         if upgrade_name in self.player_upgrades:
             self.player_upgrades[upgrade_name] = True
             print(f"{upgrade_name} has been upgraded!")
+            self.money -= UPGRADE_COST
             return f"{upgrade_name}"
         else:
             print(f"Upgrade {upgrade_name} does not exist.")
@@ -125,13 +126,13 @@ class Player:
         return fuel
 
     def rotate_left(self):
-        if(self.player_upgrades["Lewy Silnik Manewrowy"]):
+        if(self.player_upgrades["Prawy Silnik Manewrowy"]):
             self.angle -= ROTATION_MULTIPLAYER * self.rotation_speed
         else:
             self.angle -= self.rotation_speed
 
     def rotate_right(self):
-        if(self.player_upgrades["Prawy Silnik Manewrowy"]):
+        if(self.player_upgrades["Lewy Silnik Manewrowy"]):
             self.angle += ROTATION_MULTIPLAYER * self.rotation_speed
         else:
             self.angle += self.rotation_speed

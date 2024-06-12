@@ -38,12 +38,11 @@ def draw_info(player, landing_speed_limit):
     pygame.draw.rect(screen, GREEN, (10, 20, int(fuel), 20))
     pygame.draw.rect(screen, GREY, (10, 20, int(fuel), 20), 2)
 
-def start_mission(day):
+def start_mission(day,player):
     
     #mapa
     landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT,day)
     draw_lines(line_points,landing_zone_id)
-    player = Player.Player(WIDTH // 2, -50, ENTRY_SPEED)  # startowa pozycja gracza i prędkość wlotowa
 
     running = True
     while running:
@@ -111,16 +110,17 @@ def start_mission(day):
         return collision
 
 def main():
-    day = 1
     while True:
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
+            day = 1
+            player = Player.Player(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
             current_menu = Gui.hangar_menu(screen, day)
 
             while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
                 if current_menu == "start_mission":
-                    start_mission(day)
+                    start_mission(day,player)
                     day += 1
                     current_menu = Gui.hangar_menu(screen, day)
                 elif current_menu == "save_and_exit":
@@ -129,7 +129,7 @@ def main():
                     current_menu = Gui.main_menu(screen)
                     #reset
                 elif current_menu == "upgrades":
-                    current_menu = Gui.upgrade_menu(screen)
+                    current_menu = Gui.upgrade_menu(screen,player)
                     if current_menu == "hangar_menu":
                         current_menu = Gui.hangar_menu(screen, day)
 
