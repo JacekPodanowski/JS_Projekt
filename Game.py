@@ -127,6 +127,7 @@ def main():
                     # Zapis
                     print("Zapisano grę i wyjście.")
                     current_menu = Gui.main_menu(screen)
+                    #reset
                 elif current_menu == "upgrades":
                     current_menu = Gui.upgrade_menu(screen)
                     if current_menu == "hangar_menu":
