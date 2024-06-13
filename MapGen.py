@@ -5,9 +5,7 @@ import numpy as np
 from Settings import *
 
 
-mean = 100 #zmieniane potem przed użuciem na width/ilosc lini
 std_dev = 50
-
 
 def normal_dist_rand(mean,std_dev,min,max):
     while True:
@@ -58,7 +56,7 @@ def check_valid_landings(line_points, landing_zone_min_size):
     return False
 
 
-def generate_map_parameters(day):
+def generate_map_parameters(day): # Trudnośc rośnie do 30 dnia, potem jest stała
     lines_num = int(random.randint(-2,2) + 15 + (day/3)) if day <= 30 else random.randint(-2,2) + 25
     landing_zone_min_size = 60 - day if day <= 30 else 30
     landing_zone_height_scale = 0.75 + 0.005 *day if day <= 30 else 0.9

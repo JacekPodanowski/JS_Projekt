@@ -1,7 +1,5 @@
 import math
 import pygame
-import sys
-import MapGen
 from Settings import *
 
 
@@ -107,6 +105,19 @@ class Player:
 
         return "no_collision"
 
+    def check_collision_with_asteroid(self, asteroid):
+        distance = math.sqrt((self.x - asteroid.x) ** 2 + (self.y - asteroid.y) ** 2)
+        if distance < PLAYER_SIZE + asteroid.size:
+            if asteroid.type == "BIG":
+                return "BIG_collision"
+            else :
+                return "SMALL_collision"
+        return "NO_collision"
+
+    def handle_asteroid_collision(self, asteroid):
+        self.x_speed += asteroid.x_speed * SMALL_ASTEROID_TRANSFERRED_SPEED 
+        self.y_speed += asteroid.y_speed * SMALL_ASTEROID_TRANSFERRED_SPEED
+
     def adjust_thrust(self, fuel):
         if fuel > 0:
             
@@ -141,3 +152,12 @@ class Player:
         self.y += self.y_speed
         self.x_speed *= drag
         self.y_speed *= drag
+
+    def set_position(self,x, y,entry_speed):
+        self.x = x
+        self.y = y  
+        self.x_speed = 0
+        self.y_speed = entry_speed
+        self.angle = 0
+        self.fuel = self.max_fuel
+        self.running = True

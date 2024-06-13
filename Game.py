@@ -3,6 +3,8 @@ import sys
 import MapGen
 import Player
 import Gui
+import random
+import Asteroid
 from Settings import *
 
 def draw_lines(line_points,landing_zone_id):
@@ -38,14 +40,64 @@ def draw_info(player, landing_speed_limit):
     pygame.draw.rect(screen, GREEN, (10, 20, int(fuel), 20))
     pygame.draw.rect(screen, GREY, (10, 20, int(fuel), 20), 2)
 
-def start_mission(day,player):
+def generate_new_asteroid():
+    # Losujemy sektor (1 = lewy górny, 2 = górny środek-lewy, 3 = górny środek-prawy, 4 = prawy górny)
+    sector = random.choice([1, 2, 3, 4])
+
+    if sector == 1:
+        x = 0
+        y = random.uniform(0, HEIGHT / 2)
+        x_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+        y_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+    elif sector == 2:
+        x = random.uniform(0, WIDTH / 3)
+        y = 0
+        x_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+        y_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+    elif sector == 3:
+        x = random.uniform(2 * WIDTH / 3, WIDTH)
+        y = 0
+        x_speed = random.uniform(-ASTEROID_SPEED_MAX, -ASTEROID_SPEED_MIN)
+        y_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+    else:  # sector == 4
+        x = WIDTH
+        y = random.uniform(0, HEIGHT / 2)
+        x_speed = random.uniform(-ASTEROID_SPEED_MAX, -ASTEROID_SPEED_MIN)
+        y_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
+
+    asteroid_type = random.choice(["BIG", "SMALL","SMALL"]) # 2 razy więcej małych
+    new_asteroid = Asteroid.Asteroid(x, y, x_speed, y_speed, asteroid_type)
     
-    #mapa
-    landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT,day)
-    draw_lines(line_points,landing_zone_id)
+    return new_asteroid
+
+def start_mission(day,player):
+    asteorides = False
+    asteroid_delay = 0
+    if (day >= ASTEROID_DAY):
+        asteorides = True
+        asteroid_delay = ASTEROID_BASIC_DELAY - day*50 if day<=30 else 1500 
+
+    # Mapa
+    landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT, day)
+    draw_lines(line_points, landing_zone_id)
+
+    player.x_speed = random.uniform(-SIDE_SPEED, SIDE_SPEED)  # Losowa prędkość boczna
+    
+    clock = pygame.time.Clock()
+    last_asteroid_spawn_time = pygame.time.get_ticks()
+
+    asteroids = []
 
     running = True
     while running:
+        current_time = pygame.time.get_ticks()
+        
+        # Generowanie nowej asteroidy co określony czas
+        if asteorides and current_time - last_asteroid_spawn_time > asteroid_delay:
+            new_asteroid = generate_new_asteroid()
+            asteroids.append(new_asteroid)
+            last_asteroid_spawn_time = current_time
+
         # Obsługa zdarzeń
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,12 +115,10 @@ def start_mission(day,player):
             player.rotate_right()
 
         player.update(DRAG, GRAVITY_FORCE)
-        collision = player.check_collision_with_line(line_points, landing_zone_id, LANDING_SPEED_LIMIT)
-
-
+        collision_with_line = player.check_collision_with_line(line_points, landing_zone_id, LANDING_SPEED_LIMIT)
 
         # Sprawdzenie kolizji
-        if collision == "collision":
+        if collision_with_line == "collision":
             text = font.render("Loose", True, RED)
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
@@ -76,7 +126,7 @@ def start_mission(day,player):
             pygame.time.delay(2000)
             running = False
 
-        elif collision == "too fast":
+        elif collision_with_line == "too fast":
             text = font.render("you hit the spot with brutal speed", True, ORANGE)
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
@@ -84,7 +134,7 @@ def start_mission(day,player):
             pygame.time.delay(3000)
             running = False
 
-        elif collision == "win":
+        elif collision_with_line == "win":
             text = font.render("win", True, GREEN)
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
             screen.blit(text, text_rect)
@@ -97,30 +147,52 @@ def start_mission(day,player):
 
         # Narysowanie gracza
         player.draw(screen, GREY, RED)
-        draw_lines(line_points,landing_zone_id)
+        draw_lines(line_points, landing_zone_id)
         draw_info(player, LANDING_SPEED_LIMIT)
+
+        # Rysowanie i aktualizacja asteroid
+        for asteroid in asteroids:
+            asteroid.update(DRAG, GRAVITY_FORCE)
+            asteroid.draw(screen, GREY)
+            collision_with_asteroid = player.check_collision_with_asteroid(asteroid)
+            
+            if collision_with_asteroid == "BIG_collision":
+                text = font.render("Collision with big asteroid!", True, RED)
+                text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+                screen.blit(text, text_rect)
+                pygame.display.flip()
+                pygame.time.delay(2000)
+                running = False
+            
+            if collision_with_asteroid == "SMALL_collision":
+                    player.handle_asteroid_collision(asteroid)
+                    asteroids.remove(asteroid)
+            
+            if asteroid.check_collision_with_line(line_points):
+                asteroids.remove(asteroid)
 
         # Aktualizacja ekranu
         pygame.display.flip()
 
         # Ograniczenie liczby klatek na sekundę
-        pygame.time.Clock().tick(60)
+        clock.tick(60)
 
-    if collision in ["win", "collision","too fast"]:
-        return collision
+    if collision_with_line in ["win", "collision", "too fast"]:
+        return collision_with_line
 
 def main():
     while True:
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
-            day = 1
+            day = 10
             player = Player.Player(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
             current_menu = Gui.hangar_menu(screen, day)
 
             while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
                 if current_menu == "start_mission":
                     start_mission(day,player)
+                    player.set_position(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
                     day += 1
                     current_menu = Gui.hangar_menu(screen, day)
                 elif current_menu == "save_and_exit":
