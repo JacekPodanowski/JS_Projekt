@@ -1,5 +1,6 @@
 import pygame
 import sys
+import database
 from Settings import * 
 
 def main_menu(screen):
@@ -154,3 +155,85 @@ def upgrade_menu(screen, player):
                     return "hangar_menu"
 
         pygame.display.flip()
+
+def draw_text(screen, text, font, color, rect):
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(center=rect.center)
+    screen.blit(text_surface, text_rect)
+
+def save_game_menu(screen):
+    pygame.init()
+    font = pygame.font.Font(None, 36)
+    slots = database.get_save_slots()
+    screen.fill((0, 0, 0))
+
+    slot_rects = []
+    slot_width = 200
+    slot_height = 100
+    slot_margin = 50
+    start_x = (screen.get_width() - (3 * slot_width + 2 * slot_margin)) // 2
+    y = screen.get_height() // 2 - slot_height // 2
+
+    for i in range(3):
+        x = start_x + i * (slot_width + slot_margin)
+        rect = pygame.Rect(x, y, slot_width, slot_height)
+        slot_rects.append(rect)
+        if i + 1 in slots:
+            pygame.draw.rect(screen, (255, 0, 0), rect)
+            draw_text(screen, f'Dzień {slots[i + 1]}', font, (255, 255, 255), rect)
+        else:
+            pygame.draw.rect(screen, (0, 255, 0), rect)
+            draw_text(screen, 'Pusty', font, (255, 255, 255), rect)
+
+    pygame.display.flip()
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                return None
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for i, rect in enumerate(slot_rects):
+                    if rect.collidepoint(event.pos):
+                        return i + 1
+
+def load_game_menu(screen):
+    pygame.init()
+    font = pygame.font.Font(None, 36)
+    slots = database.get_save_slots()
+    screen.fill((0, 0, 0))
+
+    slot_rects = []
+    slot_width = 200
+    slot_height = 100
+    slot_margin = 50
+    start_x = (screen.get_width() - (3 * slot_width + 2 * slot_margin)) // 2
+    y = screen.get_height() // 2 - slot_height // 2
+
+    for i in range(3):
+        x = start_x + i * (slot_width + slot_margin)
+        rect = pygame.Rect(x, y, slot_width, slot_height)
+        slot_rects.append(rect)
+        if i + 1 in slots:
+            pygame.draw.rect(screen, (255, 0, 0), rect)
+            draw_text(screen, f'Dzień {slots[i + 1]}', font, (255, 255, 255), rect)
+        else:
+            pygame.draw.rect(screen, (0, 255, 0), rect)
+            draw_text(screen, 'Pusty', font, (255, 255, 255), rect)
+
+    pygame.display.flip()
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                return None
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for i, rect in enumerate(slot_rects):
+                    if rect.collidepoint(event.pos):
+                        if i + 1 in slots:
+                            return i + 1
+
+    return None

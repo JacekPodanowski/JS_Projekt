@@ -5,6 +5,7 @@ import Player
 import Gui
 import random
 import Asteroid
+import database
 from Settings import *
 
 def draw_lines(line_points,landing_zone_id):
@@ -180,34 +181,56 @@ def start_mission(day,player):
     if collision_with_line in ["win", "collision", "too fast"]:
         return collision_with_line
 
+
+def game_loop(day, player):
+    current_menu = Gui.hangar_menu(screen, day)
+    
+    while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
+        if current_menu == "start_mission":
+            start_mission(day, player)
+            player.set_position(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
+            day += 1
+            current_menu = Gui.hangar_menu(screen, day)
+        elif current_menu == "save_and_exit":
+            slot = Gui.save_game_menu(screen)
+            if slot is not None:
+                database.save_game_state(slot, day, player)
+                print("Zapisano grę i wyjście.")
+                current_menu = Gui.main_menu(screen)
+        elif current_menu == "upgrades":
+            current_menu = Gui.upgrade_menu(screen, player)
+            if current_menu == "hangar_menu":
+                current_menu = Gui.hangar_menu(screen, day)
+    
+    return current_menu
+
 def main():
+    database.initialize_database()
     while True:
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
             day = 1
             player = Player.Player(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
-            current_menu = Gui.hangar_menu(screen, day)
-
-            while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
-                if current_menu == "start_mission":
-                    start_mission(day,player)
-                    player.set_position(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
-                    day += 1
-                    current_menu = Gui.hangar_menu(screen, day)
-                elif current_menu == "save_and_exit":
-                    # Zapis
-                    print("Zapisano grę i wyjście.")
-                    current_menu = Gui.main_menu(screen)
-                    #reset
-                elif current_menu == "upgrades":
-                    current_menu = Gui.upgrade_menu(screen,player)
-                    if current_menu == "hangar_menu":
-                        current_menu = Gui.hangar_menu(screen, day)
+            current_menu = game_loop(day, player)
 
         elif current_menu == "load_game":
-            # Ładowanie gry...
-            print("Ładowanie gry...")
+            slot = Gui.load_game_menu(screen)
+            if slot is not None:
+                game_state = database.load_game_state(slot)
+                if game_state:
+                    day = game_state['day']
+                    player = Player.Player(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
+                    player.player_upgrades["Left_maneuvering_engine"] = game_state['upgrades']["Left_maneuvering_engine"]
+                    player.player_upgrades["Right_maneuvering_engine"] = game_state['upgrades']["Right_maneuvering_engine"]
+                    player.player_upgrades["Engine_efficiency"] = game_state['upgrades']["Engine_efficiency"]
+                    player.player_upgrades["Engine_power"] = game_state['upgrades']["Engine_power"]
+                    player.money = game_state['money']
+                    current_menu = game_loop(day, player)
+                else:
+                    print("Nie można załadować gry. Brak zapisanego stanu gry.")
+
+
 
 if __name__ == "__main__":
     pygame.init()
