@@ -185,7 +185,7 @@ def start_mission(day,player):
 def game_loop(day, player):
     current_menu = Gui.hangar_menu(screen, day)
     
-    while current_menu in ["start_mission", "save_and_exit", "upgrades"]:
+    while current_menu in ["start_mission", "save_and_exit", "upgrades","black_market"]:
         if current_menu == "start_mission":
             start_mission(day, player)
             player.set_position(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
@@ -199,6 +199,10 @@ def game_loop(day, player):
                 current_menu = Gui.main_menu(screen)
         elif current_menu == "upgrades":
             current_menu = Gui.upgrade_menu(screen, player)
+            if current_menu == "hangar_menu":
+                current_menu = Gui.hangar_menu(screen, day)
+        elif current_menu == "black_market":
+            current_menu = Gui.black_market_menu(screen, player)
             if current_menu == "hangar_menu":
                 current_menu = Gui.hangar_menu(screen, day)
     

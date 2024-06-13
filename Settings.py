@@ -7,6 +7,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 GREY = (128, 128, 128)
 ORANGE = (255, 165, 0)
+GOLD = (255, 215, 0)
 
 #Font
 FONT_SIZE = 40

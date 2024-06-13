@@ -53,16 +53,19 @@ def hangar_menu(screen, day):
         start_mission_button = small_font.render("Odpal Misję", True, GREEN)
         save_and_exit_button = small_font.render("Wyjdź z zapisem", True, RED)
         upgrades_button = small_font.render("Ulepszenia", True, GREEN)
+        black_market_button = small_font.render("Czarny Rynek", True, GREEN)
 
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 4))
-        start_mission_rect = start_mission_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+        start_mission_rect = start_mission_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100))
+        upgrades_rect = upgrades_button.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        black_market_rect = black_market_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
         save_and_exit_rect = save_and_exit_button.get_rect(bottomleft=(10, HEIGHT - 10))
-        upgrades_rect = upgrades_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
 
         screen.blit(title, title_rect)
         screen.blit(start_mission_button, start_mission_rect)
         screen.blit(save_and_exit_button, save_and_exit_rect)
         screen.blit(upgrades_button, upgrades_rect)
+        screen.blit(black_market_button, black_market_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -75,6 +78,8 @@ def hangar_menu(screen, day):
                     return "save_and_exit"
                 if upgrades_rect.collidepoint(event.pos):
                     return "upgrades"
+                if black_market_rect.collidepoint(event.pos):
+                    return "black_market"
 
         pygame.display.flip()
 
@@ -237,3 +242,55 @@ def load_game_menu(screen):
                             return i + 1
 
     return None
+
+
+def black_market_menu(screen, player):
+    menu_font = pygame.font.Font(None, 74)
+    fancy_font = pygame.font.Font(None, 60)
+    small_font = pygame.font.Font(None, 36)
+    
+    # Load the cover image
+    cover_image = pygame.image.load('Hermetic_book.png')
+    
+    while True:
+        screen.fill(BLACK)
+        title = menu_font.render("Czarny Rynek", True, WHITE)
+        item_name = fancy_font.render("Wielka Księga Hermetycznej Wiedzy Tajemnej", True, GOLD)
+        item_price = small_font.render("5000 ¥", True, GOLD)
+        back_button = small_font.render("Wróć do Hangaru", True, RED)
+
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 9))
+        
+        rect_width = 250
+        rect_height = int(rect_width * 1.618)
+        rect_x = WIDTH // 2 - rect_width // 2
+        rect_y = HEIGHT // 1.75 - rect_height // 2
+        
+        pygame.draw.rect(screen, GOLD, (rect_x, rect_y, rect_width, rect_height))
+        
+        cover_rect = cover_image.get_rect(center=(rect_x + rect_width // 2, rect_y + rect_height // 2))
+        
+        screen.blit(cover_image, cover_rect)
+
+        item_name_rect = item_name.get_rect(center=(WIDTH // 2, rect_y + 30))
+        item_price_rect = item_price.get_rect(center=(WIDTH // 2, rect_y + rect_height - 30))
+        back_button_rect = back_button.get_rect(bottomleft=(10, HEIGHT - 10))
+
+        screen.blit(title, title_rect)
+        screen.blit(item_name, item_name_rect)
+        screen.blit(item_price, item_price_rect)
+        screen.blit(back_button, back_button_rect)
+
+        money_label = small_font.render(f"Stan konta: {player.money} ¥", True, WHITE)
+        money_rect = money_label.get_rect(topleft=(10, 10))
+        screen.blit(money_label, money_rect)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button_rect.collidepoint(event.pos):
+                    return "hangar_menu"
+
+        pygame.display.flip()
