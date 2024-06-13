@@ -8,6 +8,7 @@ class Asteroid:
         self.y = y
         self.x_speed = x_speed
         self.y_speed = y_speed
+        self.type= type
         if  type=="BIG" :
             self.size = BIG_ASTEROID_SIZE
         elif type=="SMALL" :

@@ -65,7 +65,7 @@ def generate_new_asteroid():
         x_speed = random.uniform(-ASTEROID_SPEED_MAX, -ASTEROID_SPEED_MIN)
         y_speed = random.uniform(ASTEROID_SPEED_MIN, ASTEROID_SPEED_MAX)
 
-    asteroid_type = random.choice(["BIG", "SMALL","SMALL"]) # 2 razy więcej małych
+    asteroid_type = random.choice(["BIG", "SMALL","SMALL","SMALL"])
     new_asteroid = Asteroid.Asteroid(x, y, x_speed, y_speed, asteroid_type)
     
     return new_asteroid
@@ -75,7 +75,7 @@ def start_mission(day,player):
     asteroid_delay = 0
     if (day >= ASTEROID_DAY):
         asteorides = True
-        asteroid_delay = ASTEROID_BASIC_DELAY - day*50 if day<=30 else 1500 
+        asteroid_delay = ASTEROID_BASIC_DELAY - day*50 if day<=30 else 500 
 
     # Mapa
     landing_zone_id, line_points = MapGen.generate_random_map(WIDTH, HEIGHT, day)
@@ -185,7 +185,7 @@ def main():
         current_menu = Gui.main_menu(screen)
 
         if current_menu == "new_game":
-            day = 10
+            day = 1
             player = Player.Player(WIDTH // 2, START_HEIGHT, ENTRY_SPEED)
             current_menu = Gui.hangar_menu(screen, day)
 

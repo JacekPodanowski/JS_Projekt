@@ -110,7 +110,7 @@ class Player:
         if distance < PLAYER_SIZE + asteroid.size:
             if asteroid.type == "BIG":
                 return "BIG_collision"
-            else :
+            else:
                 return "SMALL_collision"
         return "NO_collision"
 
