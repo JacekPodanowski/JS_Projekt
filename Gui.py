@@ -252,6 +252,12 @@ def black_market_menu(screen, player):
     # Load the cover image
     cover_image = pygame.image.load('Hermetic_book.png')
     
+    new_width = int(cover_image.get_width() * 0.30)
+    new_height = int(cover_image.get_height() * 0.30)
+
+    # Zmiana rozmiaru obrazka
+    cover_image = pygame.transform.scale(cover_image, (new_width, new_height))
+    
     while True:
         screen.fill(BLACK)
         title = menu_font.render("Czarny Rynek", True, WHITE)
@@ -259,7 +265,7 @@ def black_market_menu(screen, player):
         item_price = small_font.render("5000 ¥", True, GOLD)
         back_button = small_font.render("Wróć do Hangaru", True, RED)
 
-        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 9))
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 10))
         
         rect_width = 250
         rect_height = int(rect_width * 1.618)
@@ -268,12 +274,12 @@ def black_market_menu(screen, player):
         
         pygame.draw.rect(screen, GOLD, (rect_x, rect_y, rect_width, rect_height))
         
-        cover_rect = cover_image.get_rect(center=(rect_x + rect_width // 2, rect_y + rect_height // 2))
+        cover_rect = cover_image.get_rect(center=(rect_x + rect_width // 2, rect_y + rect_height // 2 -30))
         
         screen.blit(cover_image, cover_rect)
 
-        item_name_rect = item_name.get_rect(center=(WIDTH // 2, rect_y + 30))
-        item_price_rect = item_price.get_rect(center=(WIDTH // 2, rect_y + rect_height - 30))
+        item_name_rect = item_name.get_rect(center=(WIDTH // 2, rect_y - 30 ))
+        item_price_rect = item_price.get_rect(center=(WIDTH // 2, rect_y + rect_height + 30))
         back_button_rect = back_button.get_rect(bottomleft=(10, HEIGHT - 10))
 
         screen.blit(title, title_rect)
