@@ -10,8 +10,8 @@ from Settings import *
 
 mission_completed_calls = [
     "Ładnie ładnie, czas na przerwe",
-    "Siedzi równitko !",
-    "No młody coraz lepeij",
+    "Siedzi równiutko !",
+    "No młody coraz lepiej",
     "Jest git",
     "Pełena chillera, lądownik na ziemi.",
     "Wylądowane, zero sznyta"
