@@ -44,7 +44,7 @@ def main_menu(screen):
 
         pygame.display.flip()
 
-def hangar_menu(screen, day):
+def hangar_menu(screen, day, player):
     menu_font = pygame.font.Font(None, 74)
     small_font = pygame.font.Font(None, 36)
     while True:
@@ -67,12 +67,18 @@ def hangar_menu(screen, day):
         screen.blit(upgrades_button, upgrades_rect)
         screen.blit(black_market_button, black_market_rect)
 
+        money_label = small_font.render(f"Stan konta: {player.money} ¥", True, WHITE)
+        money_rect = money_label.get_rect(topleft=(10, 10))
+        screen.blit(money_label, money_rect)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if start_mission_rect.collidepoint(event.pos):
+                    if(player.money < 0):
+                        return "no_money"
                     return "start_mission"
                 if save_and_exit_rect.collidepoint(event.pos):
                     return "save_and_exit"
@@ -253,8 +259,6 @@ def black_market_menu(screen, player):
     
     new_width = int(cover_image.get_width() * 0.30)
     new_height = int(cover_image.get_height() * 0.30)
-
-    # Zmiana rozmiaru obrazka
     cover_image = pygame.transform.scale(cover_image, (new_width, new_height))
     
     while True:
@@ -352,7 +356,7 @@ def blue_menu(screen):
     screen.blit(closed_eye_image, closed_eye_rect)
     pygame.display.flip()
 
-    pygame.time.wait(3000)
+    pygame.time.wait(DELAY)
 
     while True:
         for event in pygame.event.get():
@@ -381,7 +385,7 @@ def red_menu(screen):
     screen.blit(open_eye_image, open_eye_rect)
     
     pygame.display.flip()
-    pygame.time.wait(3000)
+    pygame.time.wait(DELAY)
 
     while True:
         for event in pygame.event.get():
@@ -393,3 +397,22 @@ def red_menu(screen):
                 return "main_menu"
         
         pygame.display.flip()
+
+def no_money_menu(screen):
+    title_font = pygame.font.Font(None, 40)
+    end_font = pygame.font.Font(None, 60)
+
+    while True:
+        screen.fill(BLACK)
+        title = title_font.render("Nie stać cię na naprawę pojazdu", True, WHITE)
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+        screen.blit(title, title_rect)
+
+        end_text = end_font.render("To Koniec", True, RED)
+        end_rect = end_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+        screen.blit(end_text, end_rect)
+
+        pygame.display.flip()
+
+        pygame.time.delay(DELAY)
+        return "main_menu"
