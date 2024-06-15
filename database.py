@@ -65,3 +65,16 @@ def get_save_slots():
     session = get_session()
     slots = session.query(GameState.slot, GameState.day).all()
     return {slot: day for slot, day in slots}
+
+
+def delete_all_saves():
+    session = get_session()
+    try:
+        session.query(GameState).delete()
+        session.commit()
+        print("All saves deleted.")
+    except Exception as e:
+        session.rollback()
+        print(f"Error deleting saves: {e}")
+    finally:
+        session.close()

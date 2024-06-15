@@ -5,6 +5,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
+BLUE = (0 ,0, 255)
 GREY = (128, 128, 128)
 ORANGE = (255, 165, 0)
 GOLD = (255, 215, 0)
@@ -41,11 +42,14 @@ ASTEROID_SPEED_MAX = 5
 SMALL_ASTEROID_TRANSFERRED_SPEED = 0.25
 
 #Economy
-START_MONEY = 500
+START_MONEY = 300
 UPGRADE_COST = 300
 FUEL_COST = 1
-REPAIR_COST = 100
-NEW_SHIP_COST = 1000
+MISSION_PAYMENT = 300
+REPAIR_COST = 500
+HERMETIC_BOOK_COST = 5000
 
+#Map settings
 # Map settings in MapGen.py/generate_map_parameters
+
 # Trudnośc rośnie do 30 dnia, potem jest stała

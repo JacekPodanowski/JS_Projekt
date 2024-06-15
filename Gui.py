@@ -50,12 +50,12 @@ def hangar_menu(screen, day):
     while True:
         screen.fill(BLACK)
         title = menu_font.render(f"Hangar - Dzień {day}", True, WHITE)
-        start_mission_button = small_font.render("Odpal Misję", True, GREEN)
+        start_mission_button = small_font.render("Wyrusz na misje", True, GREEN)
         save_and_exit_button = small_font.render("Wyjdź z zapisem", True, RED)
         upgrades_button = small_font.render("Ulepszenia", True, GREEN)
         black_market_button = small_font.render("Czarny Rynek", True, GREEN)
 
-        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+        title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 10))
         start_mission_rect = start_mission_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100))
         upgrades_rect = upgrades_button.get_rect(center=(WIDTH // 2, HEIGHT // 2))
         black_market_rect = black_market_button.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
@@ -170,7 +170,7 @@ def save_game_menu(screen):
     pygame.init()
     font = pygame.font.Font(None, 36)
     slots = database.get_save_slots()
-    screen.fill((0, 0, 0))
+    screen.fill(BLACK)
 
     slot_rects = []
     slot_width = 200
@@ -207,7 +207,7 @@ def load_game_menu(screen):
     pygame.init()
     font = pygame.font.Font(None, 36)
     slots = database.get_save_slots()
-    screen.fill((0, 0, 0))
+    screen.fill(BLACK)
 
     slot_rects = []
     slot_width = 200
@@ -243,7 +243,6 @@ def load_game_menu(screen):
 
     return None
 
-
 def black_market_menu(screen, player):
     menu_font = pygame.font.Font(None, 74)
     fancy_font = pygame.font.Font(None, 60)
@@ -262,7 +261,7 @@ def black_market_menu(screen, player):
         screen.fill(BLACK)
         title = menu_font.render("Czarny Rynek", True, WHITE)
         item_name = fancy_font.render("Wielka Księga Hermetycznej Wiedzy Tajemnej", True, GOLD)
-        item_price = small_font.render("5000 ¥", True, GOLD)
+        item_price = small_font.render(f"{HERMETIC_BOOK_COST} ¥", True, GOLD)
         back_button = small_font.render("Wróć do Hangaru", True, RED)
 
         title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 10))
@@ -298,5 +297,99 @@ def black_market_menu(screen, player):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if back_button_rect.collidepoint(event.pos):
                     return "hangar_menu"
+                if cover_rect.collidepoint(event.pos) and player.money >= HERMETIC_BOOK_COST:
+                    player.money -= HERMETIC_BOOK_COST
+                    return "hermetic_menu"
 
+        pygame.display.flip()
+
+def hermetic_menu(screen):
+    subtitle_font = pygame.font.Font(None, 50)
+    small_font = pygame.font.Font(None, 45)
+    eye_image = pygame.image.load('eye.png')
+    eye_image = pygame.transform.scale(eye_image, (int(eye_image.get_width() * 0.3), int(eye_image.get_height() * 0.3)))
+
+    while True:
+        screen.fill(BLACK)
+        subtitle = subtitle_font.render("Księga oczekuje na twoją decyzję", True, WHITE)
+        left_text = small_font.render("Kocham Iluzję", True, BLUE)
+        right_text = small_font.render("Widzę Iluzję", True, RED)
+
+        subtitle_rect = subtitle.get_rect(center=(WIDTH // 2, HEIGHT // 10))
+        left_text_rect = left_text.get_rect(midleft=(250, HEIGHT // 2))
+        right_text_rect = right_text.get_rect(midright=(WIDTH - 250, HEIGHT // 2))
+
+        eye_rect = eye_image.get_rect(midbottom=(WIDTH // 2, HEIGHT - 50))
+
+        screen.blit(subtitle, subtitle_rect)
+        screen.blit(left_text, left_text_rect)
+        screen.blit(right_text, right_text_rect)
+        screen.blit(eye_image, eye_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if left_text_rect.collidepoint(event.pos):
+                    return "blue_menu"
+                if right_text_rect.collidepoint(event.pos):
+                    return "red_menu"
+
+        pygame.display.flip()
+
+def blue_menu(screen):
+    small_font = pygame.font.Font(None, 45)
+    text = small_font.render("Miłych snów", True, BLUE)
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    
+    closed_eye_image = pygame.image.load('closed_eye.png')
+    closed_eye_image = pygame.transform.scale(closed_eye_image, (int(closed_eye_image.get_width() * 0.1), int(closed_eye_image.get_height() * 0.1)))
+    closed_eye_rect = closed_eye_image.get_rect(midtop=(WIDTH // 2, HEIGHT // 10))
+    
+    screen.fill(BLACK)
+    screen.blit(text, text_rect)
+    screen.blit(closed_eye_image, closed_eye_rect)
+    pygame.display.flip()
+
+    pygame.time.wait(3000)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                database.delete_all_saves()  # celowy zabieg szokujący
+                return "main_menu"
+        
+        pygame.display.flip()
+
+def red_menu(screen):
+    small_font = pygame.font.Font(None, 45)
+    open_eye_image = pygame.image.load('open_eye.png')
+    open_eye_image = pygame.transform.scale(open_eye_image, (int(open_eye_image.get_width() * 0.1), int(open_eye_image.get_height() * 0.1)))
+    
+    screen.fill(BLACK)
+    text1 = small_font.render("Ciągłość czasu jest iluzoryczna.", True, RED)
+    text2 = small_font.render("Co się dzieje jak śpisz ?", True, RED)
+    text1_rect = text1.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 20))
+    text2_rect = text2.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 20))
+    open_eye_rect = open_eye_image.get_rect(midtop=(WIDTH // 2, HEIGHT // 10))
+    screen.blit(text1, text1_rect)
+    screen.blit(text2, text2_rect)
+    screen.blit(open_eye_image, open_eye_rect)
+    
+    pygame.display.flip()
+    pygame.time.wait(3000)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                database.delete_all_saves()  # celowy zabieg szokujący
+                return "main_menu"
+        
         pygame.display.flip()
