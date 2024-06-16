@@ -8,6 +8,11 @@ import Asteroid
 import database
 from Settings import *
 
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Kosmiczny Kurier Kombinant")
+font = pygame.font.Font(None, FONT_SIZE)
+
 mission_completed_calls = [
     "Ładnie ładnie, czas na przerwe",
     "Siedzi równiutko !",
@@ -16,7 +21,6 @@ mission_completed_calls = [
     "Pełena chillera, lądownik na ziemi.",
     "Wylądowane, zero sznyta"
 ]
-#kto to mówi xd ? (1 osobowa działaność gospodarcza)
 
 mission_failed_calls = [
     "Gdzie byli sejfciarze ?!",
@@ -302,9 +306,3 @@ def main():
 
 
 
-if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Kosmiczny Kurier Kombinant")
-    font = pygame.font.Font(None, FONT_SIZE)
-    main()

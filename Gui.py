@@ -255,7 +255,7 @@ def black_market_menu(screen, player):
     small_font = pygame.font.Font(None, 36)
     
     # Load the cover image
-    cover_image = pygame.image.load('Hermetic_book.png')
+    cover_image = pygame.image.load('images/Hermetic_book.png')
     
     new_width = int(cover_image.get_width() * 0.30)
     new_height = int(cover_image.get_height() * 0.30)
@@ -310,7 +310,7 @@ def black_market_menu(screen, player):
 def hermetic_menu(screen):
     subtitle_font = pygame.font.Font(None, 50)
     small_font = pygame.font.Font(None, 45)
-    eye_image = pygame.image.load('eye.png')
+    eye_image = pygame.image.load('images/eye.png')
     eye_image = pygame.transform.scale(eye_image, (int(eye_image.get_width() * 0.3), int(eye_image.get_height() * 0.3)))
 
     while True:
@@ -347,7 +347,7 @@ def blue_menu(screen):
     text = small_font.render("Miłych snów", True, BLUE)
     text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     
-    closed_eye_image = pygame.image.load('closed_eye.png')
+    closed_eye_image = pygame.image.load('images/closed_eye.png')
     closed_eye_image = pygame.transform.scale(closed_eye_image, (int(closed_eye_image.get_width() * 0.1), int(closed_eye_image.get_height() * 0.1)))
     closed_eye_rect = closed_eye_image.get_rect(midtop=(WIDTH // 2, HEIGHT // 10))
     
@@ -371,7 +371,7 @@ def blue_menu(screen):
 
 def red_menu(screen):
     small_font = pygame.font.Font(None, 45)
-    open_eye_image = pygame.image.load('open_eye.png')
+    open_eye_image = pygame.image.load('images/open_eye.png')
     open_eye_image = pygame.transform.scale(open_eye_image, (int(open_eye_image.get_width() * 0.1), int(open_eye_image.get_height() * 0.1)))
     
     screen.fill(BLACK)
