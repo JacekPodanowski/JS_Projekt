@@ -5,3 +5,7 @@ game_state.db
 #Pyinstaller
 /build/
 /dist/
+
+#Nuitka
+/main.build/
+/main.dist/
