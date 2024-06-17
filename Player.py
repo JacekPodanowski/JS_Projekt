@@ -161,3 +161,9 @@ class Player:
         self.angle = 0
         self.fuel = self.max_fuel
         self.running = True
+
+    def is_outside_map(self, map_width, map_height, distance):
+        if (self.x < -distance or self.x > map_width + distance or
+                self.y < -distance or self.y > map_height + distance):
+            return True
+        return False

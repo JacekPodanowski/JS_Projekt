@@ -138,9 +138,26 @@ def start_mission(day,player):
             player.rotate_right()
 
         player.update(DRAG, GRAVITY_FORCE)
-        collision_with_line = player.check_collision_with_line(line_points, landing_zone_id, LANDING_SPEED_LIMIT)
+        
+        if (player.is_outside_map(WIDTH,HEIGHT,OUT_OF_MAP_DISTANCE)):
+            text = font.render("Utrata Syganału", True, RED)
+            text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 30))
+            screen.blit(text, text_rect)
 
+            # Wyświetlenie kosztu naprawy
+            cost_text = font.render(f"-{REPAIR_COST} ¥", True, RED)
+            cost_rect = cost_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 30))
+            screen.blit(cost_text, cost_rect)
+
+            player.money -= REPAIR_COST
+            
+            pygame.display.flip()
+            pygame.time.delay(DELAY)
+            running = False
+        
         # Sprawdzenie kolizji
+        collision_with_line = player.check_collision_with_line(line_points, landing_zone_id, LANDING_SPEED_LIMIT)
+        
         if collision_with_line == "collision":
             # Losowanie powiedzenia 
             failure_message = random.choice(mission_failed_calls)
@@ -302,7 +319,7 @@ def main():
                     player.money = game_state['money']
                     current_menu = game_loop(day, player)
                 else:
-                    print("Nie można załadować gry. Brak zapisanego stanu gry.")
+                    current_menu = Gui.main_menu(screen)
 
 
 

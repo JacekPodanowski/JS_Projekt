@@ -212,6 +212,7 @@ def save_game_menu(screen):
 def load_game_menu(screen):
     pygame.init()
     font = pygame.font.Font(None, 36)
+    small_font = pygame.font.Font(None, 24)
     slots = database.get_save_slots()
     screen.fill(BLACK)
 
@@ -233,6 +234,11 @@ def load_game_menu(screen):
             pygame.draw.rect(screen, (0, 255, 0), rect)
             draw_text(screen, 'Pusty', font, (255, 255, 255), rect)
 
+    back_text = 'Wróć'
+    back_text_surface = small_font.render(back_text, True, (255, 0, 0))
+    back_text_rect = back_text_surface.get_rect(bottomleft=(10, screen.get_height() - 10))
+    screen.blit(back_text_surface, back_text_rect)
+
     pygame.display.flip()
 
     running = True
@@ -246,6 +252,8 @@ def load_game_menu(screen):
                     if rect.collidepoint(event.pos):
                         if i + 1 in slots:
                             return i + 1
+                if back_text_rect.collidepoint(event.pos):
+                    return "main_menu"
 
     return None
 
